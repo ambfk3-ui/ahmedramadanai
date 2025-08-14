@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام محاسبي متكامل</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <script src="https://printjs-4de6.kxcdn.com/print.min.css"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .sidebar {
+            transition: all 0.3s;
+        }
+        .invoice-item:last-child {
+            border-bottom: none;
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-area, #print-area * {
+                visibility: visible;
+            }
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-blue-800 text-white w-64 flex-shrink-0">
+            <div class="p-4 flex items-center justify-between border-b border-blue-700">
+                <div class="flex items-center">
+                    <img id="business-logo" src="https://placehold.co/40x40" alt="شعار المؤسسة" class="w-10 h-10 rounded-full object-cover">
+                    <h1 id="business-name" class="text-xl font-bold mr-2">اسم المؤسسة</h1>
+                </div>
+                <button id="sidebar-toggle" class="md:hidden">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <nav class="mt-4">
+                <a href="#" class="sidebar-menu active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt mr-2"></i>
+                    لوحة التحكم
+                </a>
+                <a href="#" class="sidebar-menu" data-section="invoices">
+                    <i class="fas fa-file-invoice mr-2"></i>
+                    الفواتير
+                </a>
+                <a href="#" class="sidebar-menu" data-section="customers">
+                    <i class="fas fa-users mr-2"></i>
+                    العملاء
+                </a>
+                <a href="#" class="sidebar-menu" data-section="products">
+                    <i class="fas fa-boxes mr-2"></i>
+                    المنتجات
+                </a>
+                <a href="#" class="sidebar-menu" data-section="reports">
+                    <i class="fas fa-chart-bar mr-2"></i>
+                    التقارير
+                </a>
+                <a href="#" class="sidebar-menu" data-section="settings">
+                    <i class="fas fa-cog mr-2"></i>
+                    الإعدادات
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <button id="mobile-menu-toggle" class="md:hidden text-blue-800">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div class="relative">
+                        <i class="fas fa-bell text-gray-600 text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
+                    </div>
+                    <div class="flex items-center">
+                        <img src="https://placehold.co/40x40" alt="صورة المستخدم - شخص بالزي الرسمي يبتسم" class="w-8 h-8 rounded-full object-cover">
+                        <span class="mr-2 font-medium">مسؤول النظام</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Sections -->
+            <main class="p-6">
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="section-content">
+                    <h1 class="text-2xl font-bold mb-6">لوحة التحكم</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="text-gray-500">إجمالي المبيعات</p>
+                                    <h3 class="text-2xl font-bold">25,000 <span class="text-sm">جنيه</span></h3>
+                                </div>
+                                <div class="bg-blue-100 text-blue-800 w-12 h-12 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                            <p class="text-green-500 mt-2 text-sm"><i class="fas fa-arrow-up mr-1"></i> 12% عن الشهر الماضي</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="text-gray-500">إجمالي الفواتير</p>
+                                    <h3 class="text-2xl font-bold">124</h3>
+                                </div>
+                                <div class="bg-green-100 text-green-800 w-12 h-12 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-file-invoice"></i>
+                                </div>
+                            </div>
+                            <p class="text-green-500 mt-2 text-sm"><i class="fas fa-arrow-up mr-1"></i> 8% عن الشهر الماضي</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="text-gray-500">العملاء</p>
+                                    <h3 class="text-2xl font-bold">48</h3>
+                                </div>
+                                <div class="bg-purple-100 text-purple-800 w-12 h-12 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <p class="text-green-500 mt-2 text-sm"><i class="fas fa-arrow-up mr-1"></i> 5 عملاء جدد</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="text-gray-500">المنتجات</p>
+                                    <h3 class="text-2xl font-bold">76</h3>
+                                </div>
+                                <div class="bg-yellow-100 text-yellow-800 w-12 h-12 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                            </div>
+                            <p class="text-red-500 mt-2 text-sm"><i class="fas fa-arrow-down mr-1"></i> 2 منتج نفذت</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow lg:col-span-2">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold">إحصائيات المبيعات</h3>
+                                <select class="border border-gray-200 rounded px-3 py-1 text-sm">
+                                    <option>هذا الشهر</option>
+                                    <option>الشهر الماضي</option>
+                                    <option>هذا العام</option>
+                                </select>
+                            </div>
+                            <div class="h-64">
+                                <img src="https://placehold.co/600x300" alt="رسم بياني يوضح إحصائيات المبيعات خلال الأشهر الستة الماضية بألوان زرقاء وبيانات شهرية" class="w-full h-full object-contain">
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="font-bold mb-4">أحدث الفواتير</h3>
+                            <div class="space-y-3 max-h-64 overflow-y-auto">
+                                <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                                    <div>
+                                        <p class="font-medium">فاتورة #1001</p>
+                                        <p class="text-gray-500 text-sm">محمد أحمد</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">1,250 ج.م</p>
+                                        <p class="text-green-500 text-sm">مدفوعة</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                                    <div>
+                                        <p class="font-medium">فاتورة #1000</p>
+                                        <p class="text-gray-500 text-sm">شركة النور</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">3,450 ج.م</p>
+                                        <p class="text-green-500 text-sm">مدفوعة</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                                    <div>
+                                        <p class="font-medium">فاتورة #999</p>
+                                        <p class="text-gray-500 text-sm">أحمد علي</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">850 ج.م</p>
+                                        <p class="text-red-500 text-sm">غير مدفوعة</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                                    <div>
+                                        <p class="font-medium">فاتورة #998</p>
+                                        <p class="text-gray-500 text-sm">مكتبة المعرفة</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">2,100 ج.م</p>
+                                        <p class="text-green-500 text-sm">مدفوعة</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Invoices Section -->
+                <section id="invoices-section" class="section-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold">إدارة الفواتير</h1>
+                        <button id="new-invoice-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center">
+                            <i class="fas fa-plus mr-2"></i> فاتورة جديدة
+                        </button>
+                    </div>
+
+                    <!-- Invoices List -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b flex justify-between items-center">
+                            <div class="flex space-x-2 space-x-reverse">
+                                <select class="border border-gray-200 rounded px-3 py-1 text-sm">
+                                    <option>جميع الحالات</option>
+                                    <option>مدفوعة</option>
+                                    <option>غير مدفوعة</option>
+                                </select>
+                                <input type="text" placeholder="ابحث..." class="border border-gray-200 rounded px-3 py-1 text-sm">
+                            </div>
+                            <button class="text-blue-600 text-sm flex items-center">
+                                <i class="fas fa-filter mr-1"></i> فلتر
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">التاريخ</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العميل</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجمالي</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العمليات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1001</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/06/2023</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">محمد أحمد</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1,250 ج.م</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">مدفوعة</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 invoice-view" data-id="1001"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 invoice-edit" data-id="1001"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 invoice-delete" data-id="1001"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1000</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">14/06/2023</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">شركة النور</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3,450 ج.م</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">مدفوعة</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 invoice-view" data-id="1000"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 invoice-edit" data-id="1000"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 invoice-delete" data-id="1000"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">999</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12/06/2023</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">أحمد علي</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">850 ج.م</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">غير مدفوعة</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 invoice-view" data-id="999"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 invoice-edit" data-id="999"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 invoice-delete" data-id="999"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> السابق </a>
+                                <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> التالي </a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">عرض <span class="font-medium">1</span> إلى <span class="font-medium">3</span> من <span class="font-medium">12</span> نتائج</p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"> السابق </a>
+                                        <a href="#" aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 1 </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 2 </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 3 </a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"> التالي </a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- New Invoice Section -->
+                <section id="new-invoice-section" class="section-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold">فاتورة جديدة</h1>
+                        <div>
+                            <button id="save-invoice" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center">
+                                <i class="fas fa-save mr-2"></i> حفظ الفاتورة
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                                <div class="col-span-2">
+                                    <div class="flex items-center mb-2">
+                                        <img id="business-logo-invoice" src="https://placehold.co/40x40" alt="شعار المؤسسة" class="w-10 h-10 rounded-full object-cover">
+                                        <h2 id="business-name-invoice" class="text-xl font-bold mr-2">اسم المؤسسة</h2>
+                                    </div>
+                                    <div class="text-gray-600 mb-4">
+                                        <p id="business-address-invoice">العنوان: القاهرة، مصر</p>
+                                        <p id="business-phone-invoice">تليفون: 01001234567</p>
+                                        <p id="business-tax-invoice">الرقم الضريبي: 123-456-789</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2" for="invoice-number">رقم الفاتورة</label>
+                                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="invoice-number" type="text" value="1002" readonly>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2" for="invoice-date">تاريخ الفاتورة</label>
+                                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="invoice-date" type="date">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="bill-from">البائع</label>
+                                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="bill-from" type="text" value="اسم المؤسسة" readonly>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="bill-to">العميل</label>
+                                    <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="bill-to">
+                                        <option value="">اختر عميلاً</option>
+                                        <option value="1">محمد أحمد</option>
+                                        <option value="2">شركة النور</option>
+                                        <option value="3">أحمد علي</option>
+                                        <option value="4">مكتبة المعرفة</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr class="my-6">
+
+                            <div class="mb-6">
+                                <h3 class="text-lg font-bold mb-4">البنود</h3>
+                                <table class="min-w-full border" id="invoice-items">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="border px-4 py-2 text-right">#</th>
+                                            <th class="border px-4 py-2 text-right">الوصف</th>
+                                            <th class="border px-4 py-2 text-right">الكمية</th>
+                                            <th class="border px-4 py-2 text-right">سعر الوحدة</th>
+                                            <th class="border px-4 py-2 text-right">الخصم</th>
+                                            <th class="border px-4 py-2 text-right">الإجمالي</th>
+                                            <th class="border px-4 py-2"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="invoice-item">
+                                            <td class="border px-4 py-2">1</td>
+                                            <td class="border px-4 py-2">
+                                                <select class="product-select w-full border rounded py-1 px-2">
+                                                    <option value="">اختر منتجاً</option>
+                                                    <option value="1">حاسوب محمول</option>
+                                                    <option value="2">هاتف ذكي</option>
+                                                    <option value="3">طابعة</option>
+                                                    <option value="4">شاشة</option>
+                                                </select>
+                                            </td>
+                                            <td class="border px-4 py-2">
+                                                <input type="number" class="quantity w-full border rounded py-1 px-2 text-right" value="1" min="1">
+                                            </td>
+                                            <td class="border px-4 py-2">
+                                                <input type="number" class="price w-full border rounded py-1 px-2 text-right" value="0" min="0">
+                                            </td>
+                                            <td class="border px-4 py-2">
+                                                <div class="flex items-center">
+                                                    <input type="number" class="discount w-full border rounded py-1 px-2 text-right" value="0" min="0" max="100">
+                                                    <span class="mr-1">%</span>
+                                                </div>
+                                            </td>
+                                            <td class="border px-4 py-2 total">0 ج.م</td>
+                                            <td class="border px-4 py-2 text-center">
+                                                <button class="remove-item text-red-600">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button id="add-item" class="mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-3 rounded inline-flex items-center">
+                                    <i class="fas fa-plus mr-1"></i> إضافة بند
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="md:col-span-2">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="notes">ملاحظات</label>
+                                    <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="notes" rows="3"></textarea>
+                                </div>
+                                <div>
+                                    <div class="bg-gray-50 p-4 rounded">
+                                        <div class="flex justify-between mb-2">
+                                            <span>المجموع الجزئي:</span>
+                                            <span id="subtotal">0 ج.م</span>
+                                        </div>
+                                        <div class="flex justify-between mb-2">
+                                            <div class="flex items-center">
+                                                <span>الخصم:</span>
+                                                <input type="number" id="invoice-discount" class="w-16 ml-2 border rounded py-1 px-1 text-right" value="0" min="0" max="100">
+                                                <span class="mr-1">%</span>
+                                            </div>
+                                            <span id="discount-amount">0 ج.م</span>
+                                        </div>
+                                        <div class="flex justify-between mb-2">
+                                            <span>الضريبة (14%):</span>
+                                            <span id="tax-amount">0 ج.م</span>
+                                        </div>
+                                        <hr class="my-2">
+                                        <div class="flex justify-between font-bold text-lg">
+                                            <span>الإجمالي:</span>
+                                            <span id="total-amount">0 ج.م</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Invoice Preview Section -->
+                <section id="invoice-preview-section" class="section-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold">معاينة الفاتورة</h1>
+                        <div>
+                            <button id="print-invoice" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center mr-2">
+                                <i class="fas fa-print mr-2"></i> طباعة
+                            </button>
+                            <button id="edit-invoice" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded flex items-center">
+                                <i class="fas fa-edit mr-2"></i> تعديل
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- This is the actual printable invoice -->
+                    <div id="print-area" class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                        <div class="p-6">
+                            <div class="text-center mb-8">
+                                <div class="flex justify-center items-center mb-2">
+                                    <img id="business-logo-print" src="https://placehold.co/40x40" alt="شعار المؤسسة" class="w-16 h-16 rounded-full object-cover">
+                                    <h2 id="business-name-print" class="text-2xl font-bold mr-3">اسم المؤسسة</h2>
+                                </div>
+                                <p class="text-gray-600">فاتورة ضريبية مبسطة - نظام الدفع: نقدي</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <h3 class="font-bold mb-2">معلومات البائع:</h3>
+                                    <p id="bill-from-print">اسم المؤسسة</p>
+                                    <p id="bill-from-address-print">القاهرة، مصر</p>
+                                    <p id="bill-from-phone-print">تليفون: 01001234567</p>
+                                    <p id="bill-from-tax-print">الرقم الضريبي: 123-456-789</p>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between">
+                                        <h3 class="font-bold mb-2">فاتورة رقم:</h3>
+                                        <span id="invoice-number-print">1001</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <h3 class="font-bold mb-2">تاريخ الفاتورة:</h3>
+                                        <span id="invoice-date-print">15/06/2023</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <h3 class="font-bold mb-2">آجل السداد:</h3>
+                                        <span id="invoice-due-print">15/07/2023</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-8">
+                                <h3 class="font-bold mb-2">معلومات العميل:</h3>
+                                <p id="bill-to-print">الاسم: محمد أحمد</p>
+                                <p id="bill-to-address-print">العنوان: 123 شارع الجمهورية، القاهرة</p>
+                                <p id="bill-to-phone-print">تليفون: 01112223334</p>
+                            </div>
+
+                            <table class="min-w-full border mb-6" id="invoice-items-print">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border px-4 py-2 text-right">#</th>
+                                        <th class="border px-4 py-2 text-right">الوصف</th>
+                                        <th class="border px-4 py-2 text-right">الكمية</th>
+                                        <th class="border px-4 py-2 text-right">سعر الوحدة</th>
+                                        <th class="border px-4 py-2 text-right">الخصم</th>
+                                        <th class="border px-4 py-2 text-right">الإجمالي</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border px-4 py-2">1</td>
+                                        <td class="border px-4 py-2">حاسوب محمول</td>
+                                        <td class="border px-4 py-2">1</td>
+                                        <td class="border px-4 py-2">2,500 ج.م</td>
+                                        <td class="border px-4 py-2">0%</td>
+                                        <td class="border px-4 py-2">2,500 ج.م</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border px-4 py-2">2</td>
+                                        <td class="border px-4 py-2">هاتف ذكي</td>
+                                        <td class="border px-4 py-2">1</td>
+                                        <td class="border px-4 py-2">3,200 ج.م</td>
+                                        <td class="border px-4 py-2">5%</td>
+                                        <td class="border px-4 py-2">3,040 ج.م</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border px-4 py-2">3</td>
+                                        <td class="border px-4 py-2">طابعة</td>
+                                        <td class="border px-4 py-2">1</td>
+                                        <td class="border px-4 py-2">1,500 ج.م</td>
+                                        <td class="border px-4 py-2">0%</td>
+                                        <td class="border px-4 py-2">1,500 ج.م</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="md:col-span-2">
+                                    <p id="notes-print" class="text-gray-600">- يرجى السداد خلال 30 يوم من تاريخ الفاتورة<br>- تأكد من ذكر رقم الفاتورة عند السداد</p>
+                                </div>
+                                <div>
+                                    <div class="bg-gray-50 p-4 rounded">
+                                        <div class="flex justify-between mb-2">
+                                            <span>المجموع الجزئي:</span>
+                                            <span id="subtotal-print">7,040 ج.م</span>
+                                        </div>
+                                        <div class="flex justify-between mb-2">
+                                            <span>الخصم:</span>
+                                            <span id="discount-amount-print">160 ج.م</span>
+                                        </div>
+                                        <div class="flex justify-between mb-2">
+                                            <span>الضريبة (14%):</span>
+                                            <span id="tax-amount-print">985.6 ج.م</span>
+                                        </div>
+                                        <hr class="my-2">
+                                        <div class="flex justify-between font-bold text-lg">
+                                            <span>الإجمالي:</span>
+                                            <span id="total-amount-print">7,865.6 ج.م</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-6">
+
+                            <div class="text-center text-gray-500 text-sm">
+                                <p>شكراً لتعاملكم معنا</p>
+                                <p>للاستفسارات: <span id="contact-print">info@business.com - 01001234567</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Customers Section -->
+                <section id="customers-section" class="section-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold">إدارة العملاء</h1>
+                        <button id="new-customer-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center">
+                            <i class="fas fa-plus mr-2"></i> عميل جديد
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b flex justify-between items-center">
+                            <input type="text" placeholder="ابحث عن عميل..." class="border border-gray-200 rounded px-3 py-1 text-sm">
+                            <button class="text-blue-600 text-sm flex items-center">
+                                <i class="fas fa-filter mr-1"></i> فلتر
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الاسم</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">التليفون</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">البريد الإلكتروني</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العنوان</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العمليات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">محمد أحمد</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01112223334</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">mohamed@example.com</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">123 شارع الجمهورية، القاهرة</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 customer-view" data-id="1"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 customer-edit" data-id="1"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 customer-delete" data-id="1"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">شركة النور</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">02233445566</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">info@alnour.com</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">45 شارع التحرير، الجيزة</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 customer-view" data-id="2"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 customer-edit" data-id="2"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 customer-delete" data-id="2"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">أحمد علي</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01011223344</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">ahmed@example.com</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">78 شارع النهضة، مصر الجديدة</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 customer-view" data-id="3"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 customer-edit" data-id="3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 customer-delete" data-id="3"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> السابق </a>
+                                <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> التالي </a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">عرض <span class="font-medium">1</span> إلى <span class="font-medium">3</span> من <span class="font-medium">8</span> نتائج</p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"> السابق </a>
+                                        <a href="#" aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 1 </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 2 </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 3 </a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"> التالي </a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Products Section -->
+                <section id="products-section" class="section-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold">إدارة المنتجات</h1>
+                        <button id="new-product-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center">
+                            <i class="fas fa-plus mr-2"></i> منتج جديد
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b flex justify-between items-center">
+                            <input type="text" placeholder="ابحث عن منتج..." class="border border-gray-200 rounded px-3 py-1 text-sm">
+                            <button class="text-blue-600 text-sm flex items-center">
+                                <i class="fas fa-filter mr-1"></i> فلتر
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الصورة</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الاسم</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">التصنيف</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">السعر</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المخزون</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العمليات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <img src="https://placehold.co/50x50" alt="حاسوب محمول حديث باللون الفضي مع شاشة كبيرة" class="w-10 h-10 rounded object-cover">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">حاسوب محمول</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">إلكترونيات</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2,500 ج.م</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 product-view" data-id="1"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 product-edit" data-id="1"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 product-delete" data-id="1"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td)
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <img src="https://placehold.co/50x50" alt="هاتف ذكي حديث باللون الأسود مع شاشة كبيرة" class="w-10 h-10 rounded object-cover">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">هاتف ذكي</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">إلكترونيات</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3,200 ج.م</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 product-view" data-id="2"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 product-edit" data-id="2"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 product-delete" data-id="2"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <img src="https://placehold.co/50x50" alt="طابعة حديثة باللون الأبيض بحجم متوسط" class="w-10 h-10 rounded object-cover">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">طابعة</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">إلكترونيات</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1,500 ج.م</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3 product-view" data-id="3"><i class="fas fa-eye"></i></button>
+                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3 product-edit" data-id="3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900 product-delete" data-id="3"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> السابق </a>
+                                <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> التالي </a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">عرض <span class="font-medium">1</span> إلى <span class="font-medium">3</span> من <span class="font-medium">15</span> نتائج</p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"> السابق </a>
+                                        <a href="#" aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 1 </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 2 </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 3 </a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"> التالي </a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports-section" class="section-content hidden">
+                    <h1 class="text-2xl font-bold mb-6">التقارير والإحصائيات</h1>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="font-bold mb-4">تقرير المبيعات</h3>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="sales-report-period">الفترة الزمنية</label>
+                                <select id="sales-report-period" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="today">اليوم</option>
+                                    <option value="week">هذا الأسبوع</option>
+                                    <option value="month" selected>هذا الشهر</option>
+                                    <option value="year">هذه السنة</option>
+                                    <option value="custom">مخصص</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="bg-gray-100 p-3 rounded">
+                                    <p class="text-sm text-gray-500">عدد الفواتير</p>
+                                    <h4 class="text-xl font-bold">24</h4>
+                                </div>
+                                <div class="bg-gray-100 p-3 rounded">
+                                    <p class="text-sm text-gray-500">إجمالي المبيعات</p>
+                                    <h4 class="text-xl font-bold">35,400 ج.م</h4>
+                                </div>
+                            </div>
+                            <div class="h-48">
+                                <img src="https://placehold.co/600x300" alt="رسم بياني يمثل توزيع المبيعات اليومية خلال الشهر الحالي بألوان زرقاء وخضراء" class="w-full h-full object-contain">
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="font-bold mb-4">تقرير المنتجات الأكثر مبيعاً</h3>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="top-products-period">الفترة الزمنية</label>
+                                <select id="top-products-period" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="week">هذا الأسبوع</option>
+                                    <option value="month" selected>هذا الشهر</option>
+                                    <option value="year">هذه السنة</option>
+                                </select>
+                            </div>
+                            <div class="h-64 overflow-y-auto">
+                                <div class="flex justify-between items-center p-2 border-b">
+                                    <div class="flex items-center">
+                                        <span class="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">1</span>
+                                        <span>حاسوب محمول</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="block font-medium">12 وحدة</span>
+                                        <span class="text-sm text-gray-500">30,000 ج.م</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2 border-b">
+                                    <div class="flex items-center">
+                                        <span class="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">2</span>
+                                        <span>هاتف ذكي</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="block font-medium">8 وحدات</span>
+                                        <span class="text-sm text-gray-500">25,600 ج.م</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2 border-b">
+                                    <div class="flex items-center">
+                                        <span class="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">3</span>
+                                        <span>طابعة</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="block font-medium">6 وحدات</span>
+                                        <span class="text-sm text-gray-500">9,000 ج.م</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2 border-b">
+                                    <div class="flex items-center">
+                                        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">4</span>
+                                        <span>سماعات</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="block font-medium">5 وحدات</span>
+                                        <span class="text-sm text-gray-500">3,500 ج.م</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-2">
+                                    <div class="flex items-center">
+                                        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">5</span>
+                                        <span>ماوس</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="block font-medium">4 وحدات</span>
+                                        <span class="text-sm text-gray-500">1,200 ج.م</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="font-bold mb-4">تقرير العملاء</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-sm text-gray-500">إجمالي العملاء</p>
+                                <h4 class="text-xl font-bold">48</h4>
+                            </div>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-sm text-gray-500">عملاء جدد هذا الشهر</p>
+                                <h4 class="text-xl font-bold">5</h4>
+                            </div>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-sm text-gray-500">أفضل عميل</p>
+                                <h4 class="text-xl font-bold">شركة النور</h4>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <img src="https://placehold.co/600x300" alt="رسم بياني دائري يوضح توزيع العملاء حسب المنطقة الجغرافية بألوان متعددة" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="font-bold mb-4">تقرير المخزون</h3>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="inventory-report-type">نوع التقرير</label>
+                            <select id="inventory-report-type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="low" selected>منتجات أوشكت على النفاد</option>
+                                <option value="out">منتجات نفذت</option>
+                                <option value="all">كل المنتجات</option>
+                            </select>
+                        </div>
+                        <div class="h-64 overflow-y-auto">
+                            <div class="flex justify-between items-center p-2 border-b">
+                                <div class="flex items-center">
+                                    <img src="https://placehold.co/40x40" alt="حاسوب محمول" class="w-8 h-8 rounded object-cover mr-2">
+                                    <span>حاسوب محمول</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block font-medium">12 متبقي</span>
+                                    <span class="text-sm text-gray-500">100 إجمالي المبيعات</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center p-2 border-b">
+                                <div class="flex items-center">
+                                    <img src="https://placehold.co/40x40" alt="هاتف ذكي" class="w-8 h-8 rounded object-cover mr-2">
+                                    <span>هاتف ذكي</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block font-medium">8 متبقي</span>
+                                    <span class="text-sm text-gray-500">75 إجمالي المبيعات</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center p-2 border-b">
+                                <div class="flex items-center">
+                                    <img src="https://placehold.co/40x40" alt="طابعة" class="w-8 h-8 rounded object-cover mr-2">
+                                    <span>طابعة</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block font-medium">5 متبقي</span>
+                                    <span class="text-sm text-gray-500">50 إجمالي المبيعات</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center p-2 border-b">
+                                <div class="flex items-center">
+                                    <img src="https://placehold.co/40x40" alt="سماعات" class="w-8 h-8 rounded object-cover mr-2">
+                                    <span>سماعات</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block font-medium">2 متبقي</span>
+                                    <span class="text-sm text-gray-500">30 إجمالي المبيعات</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center p-2">
+                                <div class="flex items-center">
+                                    <img src="https://placehold.co/40x40" alt="ماوس" class="w-8 h-8 rounded object-cover mr-2">
+                                    <span>ماوس</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block font-medium">0 متبقي</span>
+                                    <span class="text-sm text-red-500">نفذ من المخزون</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings-section" class="section-content hidden">
+                    <h1 class="text-2xl font-bold mb-6">إعدادات النظام</h1>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2">
+                            <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                                <div class="p-4 border-b">
+                                    <h3 class="font-bold">معلومات الأساسية</h3>
+                                </div>
+                                <div class="p-6">
+                                    <form>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="business-name-setting">اسم المؤسسة</label>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="business-name-setting" type="text">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="business-address">العنوان</label>
+                                            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="business-address" rows="2"></textarea>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                            <div>
+                                                <label class="block text-gray-700 text-sm font-bold mb-2" for="business-phone">رقم التليفون</label>
+                                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="business-phone" type="text">
+                                            </div>
+                                            <div>
+                                                <label class="block text-gray-700 text-sm font-bold mb-2" for="business-tax">الرقم الضريبي</label>
+                                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="business-tax" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="business-email">البريد الإلكتروني</label>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="business-email" type="email">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="business-logo-file">شعار المؤسسة</label>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="business-logo-file" type="file" accept="image/*">
+                                        </div>
+                                        <button type="button" id="save-settings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                                            حفظ التغييرات
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                                <div class="p-4 border-b">
+                                    <h3 class="font-bold">إعدادات الفواتير</h3>
+                                </div>
+                                <div class="p-6">
+                                    <form>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="invoice-prefix">بادئة رقم الفاتورة</label>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="invoice-prefix" type="text" value="INV-">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="invoice-start">رقم الفاتورة التالي</label>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="invoice-start" type="number" value="1002">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="invoice-tax">معدل الضريبة (%)</label>
+                                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="invoice-tax" type="number" value="14">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="invoice-notes">ملاحظات الفاتورة الافتراضية</label>
+                                            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="invoice-notes" rows="3">- يرجى السداد خلال 30 يوم من تاريخ الفاتورة
+- تأكد من ذكر رقم الفاتورة عند السداد</textarea>
+                                        </div>
+                                        <button type="button" id="save-invoice-settings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                                            حفظ التغييرات
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the system when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu toggle for mobile
+            document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('hidden');
+                document.querySelector('.sidebar').classList.toggle('block');
+            });
+
+            // Sidebar navigation
+            const menuItems = document.querySelectorAll('.sidebar-menu');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all items
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Hide all sections
+                    document.querySelectorAll('.section-content').forEach(section => {
+                        section.classList.add('hidden');
+                    });
+                    
+                    // Show the selected section
+                    const sectionId = this.getAttribute('data-section') + '-section';
+                    document.getElementById(sectionId).classList.remove('hidden');
+                });
+            });
+
+            // Initialize with dashboard section visible
+            document.getElementById('dashboard-section').classList.remove('hidden');
+
+            // Add new invoice button
+            document.getElementById('new-invoice-btn').addEventListener('click', function() {
+                // Hide all sections
+                document.querySelectorAll('.section-content').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // Show new invoice section
+                document.getElementById('new-invoice-section').classList.remove('hidden');
+                
+                // Update menu active state
+                menuItems.forEach(i => i.classList.remove('active'));
+                
+                // Set current date
+                const today = new Date();
+                const dateStr = today.toISOString().split('T')[0];
+                document.getElementById('invoice-date').value = dateStr;
+            });
+
+            // Add new customer button
+            document.getElementById('new-customer-btn').addEventListener('click', function() {
+                alert('سيتم تنفيذ إضافة عميل جديد هنا');
+                // In a complete system, you would show a form to add a new customer
+            });
+
+            // Add new product button
+            document.getElementById('new-product-btn').addEventListener('click', function() {
+                alert('سيتم تنفيذ إضافة منتج جديد هنا');
+                // In a complete system, you would show a form to add a new product
+            });
+
+            // Save settings button
+            document.getElementById('save-settings').addEventListener('click', function() {
+                const businessName = document.getElementById('business-name-setting').value;
+                if (businessName) {
+                    document.getElementById('business-name').textContent = businessName;
+                    document.getElementById('business-name-invoice').textContent = businessName;
+                    document.getElementById('business-name-print').textContent = businessName;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('business_name', businessName);
+                    alert('تم حفظ الإعدادات بنجاح');
+                }
+            });
+
+            // Load business name from localStorage if exists
+            if (localStorage.getItem('business_name')) {
+                const businessName = localStorage.getItem('business_name');
+                document.getElementById('business-name').textContent = businessName;
+                document.getElementById('business-name-setting').value = businessName;
+                document.getElementById('business-name-invoice').textContent = businessName;
+                document.getElementById('business-name-print').textContent = businessName;
+            }
+
+            // Invoice item calculations
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('quantity') || e.target.classList.contains('price') || e.target.classList.contains('discount')) {
+                    const row = e.target.closest('.invoice-item');
+                    if (row) {
+                        calculateRowTotal(row);
+                        calculateInvoiceTotals();
+                    }
+                }
+                
+                if (e.target.id === 'invoice-discount') {
+                    calculateInvoiceTotals();
+                }
+            });
+
+            // Add new item row
+            document.getElementById('add-item').addEventListener('click', function() {
+                const tbody = document.querySelector('#invoice-items tbody');
+                const rows = tbody.querySelectorAll('tr');
+                const newRow = rows[rows.length - 1].cloneNode(true);
+                
+                // Reset values
+                newRow.querySelector('.quantity').value = 1;
+                newRow.querySelector('.price').value = 0;
+                newRow.querySelector('.discount').value = 0;
+                newRow.querySelector('.total').textContent = '0 ج.م';
+                
+                // Update row number
+                newRow.querySelector('td:first-child').textContent = rows.length + 1;
+                
+                // Add to table
+                tbody.appendChild(newRow);
+                
+                // Add event to remove button
+                newRow.querySelector('.remove-item').addEventListener('click', function() {
+                    this.closest('tr').remove();
+                    renumberRows();
+                    calculateInvoiceTotals();
+                });
+            });
+
+            // Remove item button (delegated event)
+            document.getElementById('invoice-items').addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+                    e.target.closest('tr').remove();
+                    renumberRows();
+                    calculateInvoiceTotals();
+                }
+            });
+
+            // Save invoice
+            document.getElementById('save-invoice').addEventListener('click', function() {
+                const invoiceNumber = document.getElementById('invoice-number').value;
+                const invoiceDate = document.getElementById('invoice-date').value;
+                const customer = document.getElementById('bill-to').value;
+                
+                if (!customer) {
+                    alert('الرجاء اختيار عميل');
+                    return;
+                }
+                
+                // Check if there are items
+                const items = document.querySelectorAll('#invoice-items tbody tr');
+                if (items.length === 0) {
+                    alert('الرجاء إضافة بند واحد على الأقل');
+                    return;
+                }
+                
+                // Check if all items have products selected
+                let allValid = true;
+                items.forEach(item => {
+                    if (!item.querySelector('.product-select').value) {
+                        allValid = false;
+                    }
+                });
+                
+                if (!allValid) {
+                    alert('الرجاء اختيار منتج لكل بند');
+                    return;
+                }
+                
+                // Here you would normally save to database or localStorage
+                // For demo, we'll just show the preview
+                
+                // Update preview section
+                updateInvoicePreview();
+                
+                // Show preview section
+                document.querySelectorAll('.section-content').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                document.getElementById('invoice-preview-section').classList.remove('hidden');
+            });
+
+            // Edit invoice
+            document.getElementById('edit-invoice').addEventListener('click', function() {
+                document.querySelectorAll('.section-content').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                document.getElementById('new-invoice-section').classList.remove('hidden');
+            });
+
+            // Print invoice
+            document.getElementById('print-invoice').addEventListener('click', function() {
+                printJS({
+                    printable: 'print-area',
+                    type: 'html',
+                    style: `
+                        @page { size: A4; margin: 10mm; }
+                        body { font-family: 'Tajawal', sans-serif; direction: rtl; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                        th { background-color: #f2f2f2; }
+                    `
+                });
+            });
+
+            // Helper functions
+            function
